@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
     private int count;
     public Text countText;
     public Text winText;
-
+    private Vector3 movement;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -22,9 +22,11 @@ public class PlayerController : MonoBehaviour {
         //float moveHorizontal = Input.GetAxis("Horizontal");
 
         //float moveVertical = Input.GetAxis("Vertical");
-        Vector3 movement = Input.acceleration;//new Vector3(moveHorizontal, 0.0f, moveVertical);
+        movement = Input.acceleration * speed;//new Vector3(moveHorizontal, 0.0f, moveVertical);
+        System.Console.WriteLine(movement.x + " " + movement.y + " " + movement.z);
+        rb.AddForce(movement.x, movement.y, (movement.z*-1)-1);
+        setCountText();
 
-        rb.AddForce(movement * speed);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,13 +35,13 @@ public class PlayerController : MonoBehaviour {
         {
             other.gameObject.SetActive(false);
             count++;
-            setCountText();
+           // setCountText();
         }
     }
 
     void setCountText()
     {
-        countText.text = "Count: " + count.ToString();
+        countText.text = movement.x + " " + movement.y + " " + movement.z; //"Count: " + count.ToString();
         if (count >= 4)
         {
             winText.text = "You won";
